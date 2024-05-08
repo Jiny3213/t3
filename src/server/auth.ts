@@ -7,6 +7,7 @@ import {
 import { type Adapter } from "next-auth/adapters";
 import DiscordProvider from "next-auth/providers/discord";
 import Github from "next-auth/providers/github";
+import EmailProvider from "next-auth/providers/email"
 
 
 import { env } from "~/env";
@@ -20,6 +21,7 @@ import { db } from "~/server/db";
  */
 declare module "next-auth" {
   interface Session extends DefaultSession {
+    id: string,
     user: {
       id: string;
       // ...other properties
@@ -39,14 +41,32 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthOptions = {
+  session: {
+    strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
+  jwt: {
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
+  // https://jinyuu.vercel.app
+  // https://jinyuu.vercel.app/api/auth/callback/github
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    session: ({ session, token, user }) => {
+      // console.log('callbacks-session', session, token, user)
+      // no user when using jwt strategy
+      return {
+        ...session,
+        id: token.sub,
+        user: {
+          ...session.user,
+          id: token.sub,
+        },
+      }
+    },
+    jwt({ token, account, profile }) {
+      // console.log('jwt', token, account, profile)
+      return token
+    }
   },
   adapter: PrismaAdapter(db) as Adapter,
   providers: [
@@ -57,16 +77,11 @@ export const authOptions: NextAuthOptions = {
     Github({
       clientId: env.GITHUB_CLIENT_ID,
       clientSecret: env.GITHUB_CLIENT_SECRET
+    }),
+    EmailProvider({
+      server: `smtp://pijiny@qq.com:${env.EMAIL_SECRET}@smtp.qq.com:587`,
+      from: 'NextAuth <pijiny@qq.com>'
     })
-    /**
-     * ...add more providers here.
-     *
-     * Most other providers require a bit more work than the Discord provider. For example, the
-     * GitHub provider requires you to add the `refresh_token_expires_in` field to the Account
-     * model. Refer to the NextAuth.js docs for the provider you want to use. Example:
-     *
-     * @see https://next-auth.js.org/providers/github
-     */
   ],
 };
 

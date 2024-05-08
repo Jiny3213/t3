@@ -3,6 +3,12 @@ import "~/styles/globals.css";
 import { Inter } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
+import CssBaseline from '@mui/material/CssBaseline';
+
+import { ThemeProvider } from '@mui/material/styles';
+import { StyledEngineProvider } from '@mui/material/styles';
+// import theme from '~/theme';
 
 const inter = Inter({
   subsets: ["latin"],
@@ -22,8 +28,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`font-sans ${inter.variable}`}>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+      <body className={`font-sans ${inter.variable}`} id="__next">
+        <AppRouterCacheProvider options={{ enableCssLayer: true }}>
+          {/* <ThemeProvider theme={theme}> */}
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            {/* <StyledEngineProvider injectFirst> */}
+              <CssBaseline />
+              <TRPCReactProvider>{children}</TRPCReactProvider>
+            {/* </StyledEngineProvider> */}
+          {/* </ThemeProvider> */}
+        </AppRouterCacheProvider>
       </body>
     </html>
   );

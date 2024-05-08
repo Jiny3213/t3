@@ -11,4 +11,9 @@ export default {
     },
   },
   plugins: [],
+  corePlugins: {
+    preflight: false
+  },
+  // important: '#__next' // id in layout
+  // https://mui.com/material-ui/integrations/interoperability/#tailwind-css
 } satisfies Config;
