@@ -1,28 +1,25 @@
 'use client'
 import { useRef, useState } from "react"
-import * as React from 'react';
 import { api } from "~/trpc/react"
 import axios from "axios"
 import Image from "next/image"
 import Checkbox from '@mui/material/Checkbox'
 import { Button } from "@mui/material"
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import { Toast } from 'antd-mobile'
 
 export default function Upload() {
   const [file, setFile] = useState<File|null>(null);
   const { data: files, refetch } = api.file.getOwnFiles.useQuery()
-  const [open, setOpen] = React.useState(false);
   const [imageIds, setImageIds] = useState<number[]>([])
-
-  console.log(files)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const submitFile = async () => {
     if(!file) {
-      setOpen(true)
+      // setOpen(true)
+      Toast.show({
+        icon: 'fail',
+        content: '未选择任何文件'
+      })
       return
     }
     const formData = new FormData();
@@ -39,8 +36,12 @@ export default function Upload() {
     }).catch(error => {
       console.error(error);
     });
-
+    setFile(null)
     await refetch()
+    Toast.show({
+      icon: 'success',
+      content: '上传成功'
+    })
   };
 
   const removeFiles = api.file.removeFiles.useMutation({
@@ -53,18 +54,28 @@ export default function Upload() {
   async function onRemove() {
     console.log(imageIds)
     await removeFiles.mutate({fileIds: imageIds})
+    Toast.show({
+      icon: 'success',
+      content: '删除成功'
+    })
     setImageIds([])
   }
 
   return (<>
     <h1 className="text-center text-2xl font-bold">upload your own Images</h1>
-    <input type="file" onChange={event => setFile(event.target.files ? event.target.files[0]! : null)} />
-    <Button variant="contained" onClick={submitFile}>Upload</Button>
+    <div className="text-center">
+      <p>{file?.name || '未选择任何文件'}</p>
+      <Button variant="contained" onClick={() => inputRef.current?.click()}>select file</Button>
+      <input ref={inputRef} className="hidden" type="file" onChange={event => setFile(event.target.files ? event.target.files[0]! : null)} />
+    </div>
+    <div className="text-center mt-4">
+      <Button variant="contained" onClick={submitFile}>Upload</Button>
+    </div>
 
     <h2 className="text-center text-xl font-bold">your Images</h2>
-    <div className="flex gap-1">
+    <div className="flex gap-1 flex-wrap">
       {files?.map(item => 
-        <div key={item.hash} className="relative border">
+        <div key={item.hash} className="relative border border-gray-200 border-solid">
           <Checkbox className="absolute top-0 left-0" value={item.id} checked={imageIds.includes(item.id)} onChange={(e, checked) => {
             console.log(checked, e)
             checked ? setImageIds(imageIds.concat([Number(e.target.value)])) : setImageIds(imageIds.filter(item => item !== Number(e.target.value)))
@@ -73,29 +84,8 @@ export default function Upload() {
         </div>
       )}
     </div>
-    <Button variant="contained" color="error" onClick={onRemove}>删除图片</Button>
-    
-
-    <Dialog
-      open={open}
-      onClose={() => setOpen(false)}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-    >
-      <DialogTitle id="alert-dialog-title">
-        {"还未选择图片?"}
-      </DialogTitle>
-      <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          选择图片再上传
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={() => setOpen(false)}>确认</Button>
-        <Button onClick={() => setOpen(false)} autoFocus>
-          取消
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <div className="text-center mt-4">
+      <Button variant="contained" color="error" onClick={onRemove}>选择并删除图片</Button>
+    </div>
   </>)
 }

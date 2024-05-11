@@ -21,7 +21,8 @@ export const fileRouter = createTRPCRouter({
       const mac = new qiniu.auth.digest.Mac(env.QINIU_AK, env.QINIU_SK)
       const config = new qiniu.conf.Config();
       const bucketManager = new qiniu.rs.BucketManager(mac, config);
-      const privateBucketDomain = 'http://sc0mb7a59.hn-bkt.clouddn.com';
+      // const privateBucketDomain = 'http://sc0mb7a59.hn-bkt.clouddn.com';
+      const privateBucketDomain = 'http://cdn.jinyuu.cn';
       const deadline = parseInt('' + Date.now() / 1000) + 3600; // 1小时过期
 
       return ownFiles.map(item => {

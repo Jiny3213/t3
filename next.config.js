@@ -20,6 +20,12 @@ const config = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'http',
+        hostname: 'cdn.jinyuu.cn',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };
