@@ -110,3 +110,11 @@ model File {
   createdBy   User   @relation(fields: [createdById], references: [id])
   createdById String
 }
+
+// 用于各种配置
+model Config {
+  key       String   @id
+  value     String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
