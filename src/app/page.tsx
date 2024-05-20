@@ -35,7 +35,7 @@ export default async function Home() {
                 </div>
               }
             </div>
-            <Button variant="contained" href={session ? "/api/auth/signout" : "/api/auth/signin"}>{session ? "Sign out" : "Sign in"}</Button>
+            <Button variant="contained" href={session ? "/api/auth/signout" : "/login"}>{session ? "Sign out" : "Sign in"}</Button>
           </div>
         </div>
 

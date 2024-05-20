@@ -21,4 +21,4 @@ export default withAuth(
   },
 )
 
-export const config = { matcher: ["/upload"] }
+export const config = { matcher: ["/upload", '/user'] }

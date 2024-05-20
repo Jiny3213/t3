@@ -31,6 +31,7 @@ export const env = createEnv({
     EMAIL_SECRET: z.string(),
     TENCENT_SECRET_ID: z.string(),
     TENCENT_SECRET_KEY: z.string(),
+    RSA_PRIV: z.string()
   },
 
   /**
@@ -59,7 +60,8 @@ export const env = createEnv({
     QINIU_SK: process.env.QINIU_SK,
     EMAIL_SECRET: process.env.EMAIL_SECRET,
     TENCENT_SECRET_ID: process.env.TENCENT_SECRET_ID,
-    TENCENT_SECRET_KEY: process.env.TENCENT_SECRET_KEY
+    TENCENT_SECRET_KEY: process.env.TENCENT_SECRET_KEY,
+    RSA_PRIV: process.env.RSA_PRIV
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
