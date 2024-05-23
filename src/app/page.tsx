@@ -16,26 +16,16 @@ export default async function Home() {
         <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
           Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
         </h1>
-       
+
         <div className="flex flex-col items-center gap-2">
           <p className="text-2xl text-white">
             {hello ? hello.greeting : "Loading tRPC query..."}
           </p>
 
-          <Button variant="contained" href="/translate">translate</Button>
-
           <div className="flex flex-col items-center justify-center gap-4">
             <div className="text-center text-2xl text-white">
-              {session && 
-                <div>
-                  <p>
-                    <Button variant="contained" href="/upload">upload</Button>
-                  </p>
-                  <span>Logged in as {session.user?.name}</span><Image width={50} height={50} src={session.user?.image??''} alt="avatar"/>
-                </div>
-              }
+              {session && <span>Logged in as {session.user?.name}</span>}
             </div>
-            <Button variant="contained" href={session ? "/api/auth/signout" : "/login"}>{session ? "Sign out" : "Sign in"}</Button>
           </div>
         </div>
 

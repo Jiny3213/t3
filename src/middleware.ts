@@ -10,6 +10,9 @@ export default withAuth(
     console.log('middleware', req.url)
   },
   {
+    pages: {
+      signIn: '/login',
+    },
     callbacks: {
       authorized: ({ token }) => {
         // console.log('middleware-callbacks', token)
@@ -21,4 +24,11 @@ export default withAuth(
   },
 )
 
-export const config = { matcher: ["/upload", '/user'] }
+export const config = { 
+  // 需要登录后使用的路由
+  matcher: [
+    '/user', 
+    '/upload', 
+    '/translate'
+  ] 
+}

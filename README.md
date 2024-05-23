@@ -31,6 +31,7 @@
 - 将腾讯云域名用 cloudflare 解析，代理到 vercel，从而实现国内访问 https://juejin.cn/post/7301193497247727652
 - 腾讯云翻译接口 https://cloud.tencent.com/document/api/551/15619
 - DBeaver 连接超时解决办法 https://www.zhihu.com/question/384806850/answer/2262290011
+- antd 存在全局样式污染问题，引入组件会设置全局a标签颜色 https://github.com/ant-design/ant-design-mobile/issues/151
 
 ## 问题记录
 

@@ -58,7 +58,7 @@ export default function() {
           </div>
         }
       >
-        <Form.Header>设置密码</Form.Header>
+        <Form.Header>{session?.user.hasPassword ? 'set a password' : 'reset your password'}</Form.Header>
         <Form.Item
           name='password'
           label='密码'
@@ -74,9 +74,17 @@ export default function() {
           <Input onChange={console.log} type="password" placeholder='请输入密码' />
         </Form.Item>
       </Form> }
-      <Button block color='primary' size='large' onClick={() => setShowSetPassword(!showSetPassword)}>
-        { showSetPassword ? 'cancel' : 'Set a password' }
-      </Button>
+
+      {/* set password after login */}
+      { session && session.user.hasPassword ? 
+        <Button block color='primary' size='large' onClick={() => setShowSetPassword(!showSetPassword)}>
+          { showSetPassword ? 'cancel' : 'reset your password' }
+        </Button>
+        :
+        <Button block color='primary' size='large' onClick={() => setShowSetPassword(!showSetPassword)}>
+          { showSetPassword ? 'cancel' : 'Set a password' }
+        </Button>
+      }
       <br />
       <Button block color='default' size='large' onClick={() => signOut()}>
         SignOut

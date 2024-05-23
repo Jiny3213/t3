@@ -3,8 +3,10 @@ import { signIn, signOut } from 'next-auth/react'
 import { Form, Input, Dialog, Button } from 'antd-mobile'
 import { useState } from 'react'
 import { getSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 export default function Login() {
+  const router = useRouter()
   const [isSignIn, setIsSignIn] = useState(true)
   const [isLogin, setIsLogin] = useState(false)
   getSession().then(session => {
@@ -18,10 +20,18 @@ export default function Login() {
   }
 
   async function onPasswordSignIn(values: any) {
-    signIn('password', {
+    const res = await signIn('password', {
       email: values.email,
-      password: values.password
+      password: values.password,
+      redirect: false // 禁止重定向
     })
+    console.log(res)
+    if(res?.ok === false) {
+      alert('登录失败')
+    } else {
+      alert('登录成功')
+      router.push('/user')
+    }
   }
 
   function checkEmail(_: any, value: string) {
@@ -74,6 +84,7 @@ export default function Login() {
         </Form.Item>
       </Form>
       :
+      // 邮箱登陆
       <Form
         className='rounded-lg'
         layout='horizontal'
@@ -84,7 +95,9 @@ export default function Login() {
             <Button block type='submit' color='primary' size='large'>
               SignIn
             </Button>
-            <br /> 
+            <br />
+            <p className='text-white'>已有账号并设置了密码？</p> 
+            <br />
             <Button block color='default' size='large' onClick={() => setIsSignIn(true)}>
               switch to password SignIn
             </Button>

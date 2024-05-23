@@ -13,6 +13,8 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import { env } from "~/env"
 import { db } from "~/server/db"
 import * as argon2 from "argon2"
+import { type DefaultJWT } from "next-auth/jwt"
+import type { User as PrismaUser } from '@prisma/client'
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -25,15 +27,24 @@ declare module "next-auth" {
     id: string,
     user: {
       id: string;
+      hasPassword: boolean
       // ...other properties
       // role: UserRole;
     } & DefaultSession["user"];
   }
 
+  interface JWT extends DefaultJWT {
+    hasPassword: boolean
+  }
+
+  interface User extends PrismaUser {
+    
+  }
   // interface User {
   //   // ...other properties
   //   // role: UserRole;
   // }
+
 }
 
 /**
@@ -42,6 +53,9 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthOptions = {
+  pages: {
+    signIn: '/login'
+  },
   session: {
     strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60, // 30 days
@@ -61,14 +75,14 @@ export const authOptions: NextAuthOptions = {
         user: {
           ...session.user,
           id: token.sub,
+          hasPassword: token.hasPassword
         },
       }
     },
     jwt({ token, account, profile, user }) {
       console.log('jwt', token, account, profile, user)
       if(user) { // 登录时读取的 user 表信息
-        // 增加字段
-        token.test = '123123'
+        token.hasPassword = !!user.password
       }
       return token
     }
@@ -88,7 +102,7 @@ export const authOptions: NextAuthOptions = {
       from: 'NextAuth <pijiny@qq.com>'
     }),
     CredentialsProvider({
-      name: '邮箱密码',
+      name: 'password',
       id: 'password',
       credentials: {
         email: { label: "Email", type: "text" },
