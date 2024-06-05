@@ -1,7 +1,6 @@
 'use client'
-import { TextArea } from "antd-mobile"
 import { useState } from "react"
-import { Button } from "@mui/material"
+import { Button, TextField } from "@mui/material"
 import { api } from "~/trpc/react"
 
 export default function () {
@@ -27,7 +26,15 @@ export default function () {
 
   return <>
     <div className="p-4">
-      <TextArea className="bg-gray-100" placeholder="输入中文" value={value} onChange={val => setValue(val)} autoSize={{ minRows: 3, maxRows: 5 }}></TextArea>
+      <TextField
+        id="translateText"
+        label="Translate Text"
+        value={value}
+        onChange={e => setValue(e.target.value)}
+        fullWidth
+        multiline
+        maxRows={4}
+      />
       <div className="text-center my-4">
         <Button variant="contained" onClick={onTranslate} disabled={isFetching}>translate</Button>
       </div>

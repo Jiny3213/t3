@@ -27,7 +27,6 @@
     "@trpc/next": "next",
     "@trpc/react-query": "next",
     "@trpc/server": "next",
-    "antd-mobile": "^5.36.0",
     "argon2": "^0.40.1",
     "axios": "^1.6.8",
     "jsencrypt": "^3.3.2",
