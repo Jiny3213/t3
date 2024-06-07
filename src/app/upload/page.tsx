@@ -44,10 +44,37 @@ export default function Upload() {
   })
 
   async function onRemove() {
-    console.log(imageIds)
+    if(!imageIds.length) {
+      alert('未选择图片')
+      return
+    }
     await removeFiles.mutate({fileIds: imageIds})
     alert('删除成功')
     setImageIds([])
+  }
+
+  async function downloadResource(url: string, filename: string) {
+    const response = await fetch(url)
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    const blob = await response.blob()
+    const downloadLink = document.createElement('a')
+    downloadLink.href = window.URL.createObjectURL(blob)
+    downloadLink.download = filename
+    document.body.appendChild(downloadLink)
+    downloadLink.click()
+    document.body.removeChild(downloadLink)
+  }
+
+  function onDownload() {
+    if(!imageIds.length) {
+      alert('未选择文件')
+      return
+    }
+    const id = imageIds[0]
+    const file = files?.find(item => item.id === id)
+    downloadResource(file?.url || '', file?.name || '')
   }
 
   return (<>
@@ -74,6 +101,7 @@ export default function Upload() {
       )}
     </div>
     <div className="text-center mt-4">
+      <Button variant="contained" onClick={onDownload}>下载文件</Button>
       <Button variant="contained" color="error" onClick={onRemove}>选择并删除图片</Button>
     </div>
   </>)
