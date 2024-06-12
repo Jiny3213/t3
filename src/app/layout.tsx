@@ -34,8 +34,8 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // 能否在此处注入session provider?
   const session = await getServerAuthSession()
-  console.log('layout ', session)
   return (
     <html lang="en">
       <body className={`font-sans ${inter.variable}`} id="__next">

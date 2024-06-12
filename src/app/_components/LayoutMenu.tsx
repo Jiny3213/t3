@@ -13,19 +13,25 @@ import ListItemText from '@mui/material/ListItemText'
 import HomeIcon from '@mui/icons-material/Home'
 import TranslateIcon from '@mui/icons-material/Translate'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+import BookmarkIcon from '@mui/icons-material/Bookmark'
 
 export default function() {
   const [isOpen, setIsOpen] = useState(false)
   const menuList = [
     {
-      label: 'translate',
+      label: 'Translate',
       href: '/translate',
       icon: <TranslateIcon />
     },
     {
-      label: 'upload',
+      label: 'Upload',
       href: '/upload',
       icon: <CloudUploadIcon />
+    },
+    {
+      label: 'Bookmark',
+      href: '/bookmark',
+      icon: <BookmarkIcon />
     },
   ]
 

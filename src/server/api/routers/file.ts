@@ -1,13 +1,13 @@
-import { z } from "zod";
+import { z } from "zod"
 import qiniu from 'qiniu'
-import { env } from "~/env";
-import axios from 'axios'
+import { env } from "~/env"
+import { CDN_DOMAIN } from "~/config"
 
 import {
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
-} from "~/server/api/trpc";
+} from "~/server/api/trpc"
 
 export const fileRouter = createTRPCRouter({
   // 获取用户所有文件
@@ -19,11 +19,11 @@ export const fileRouter = createTRPCRouter({
         }
       })
       const mac = new qiniu.auth.digest.Mac(env.QINIU_AK, env.QINIU_SK)
-      const config = new qiniu.conf.Config();
-      const bucketManager = new qiniu.rs.BucketManager(mac, config);
+      const config = new qiniu.conf.Config()
+      const bucketManager = new qiniu.rs.BucketManager(mac, config)
       // const privateBucketDomain = 'http://sc0mb7a59.hn-bkt.clouddn.com';
-      const privateBucketDomain = 'http://cdn.jinyuu.cn';
-      const deadline = parseInt('' + Date.now() / 1000) + 3600; // 1小时过期
+      const privateBucketDomain = CDN_DOMAIN
+      const deadline = parseInt('' + Date.now() / 1000) + 3600 // 1小时过期
 
       return ownFiles.map(item => {
         item.url = bucketManager.privateDownloadUrl(privateBucketDomain, encodeURIComponent(item.name), deadline)
@@ -37,14 +37,14 @@ export const fileRouter = createTRPCRouter({
     .mutation(async ({input, ctx}) => {
       console.log(input)
       const resList = []
-      const mac = new qiniu.auth.digest.Mac(env.QINIU_AK, env.QINIU_SK);
-      const config = new qiniu.conf.Config();
+      const mac = new qiniu.auth.digest.Mac(env.QINIU_AK, env.QINIU_SK)
+      const config = new qiniu.conf.Config()
       // @ts-ignore
-      config.useHttpsDomain = true;
+      config.useHttpsDomain = true
       // @ts-ignore
-      config.regionsProvider = qiniu.httpc.Region.fromRegionId('z2');
-      const bucketManager = new qiniu.rs.BucketManager(mac, config);
-      const bucket = "t3oss";
+      config.regionsProvider = qiniu.httpc.Region.fromRegionId('z2')
+      const bucketManager = new qiniu.rs.BucketManager(mac, config)
+      const bucket = "t3oss"
       for(let id of input.fileIds) {
         console.log(id)
         const file = await ctx.db.file.findFirst({
@@ -82,7 +82,7 @@ export const fileRouter = createTRPCRouter({
         expires: 7200
       }
       const putPolicy = new qiniu.rs.PutPolicy(options)
-      const uploadToken = putPolicy.uploadToken(mac);
+      const uploadToken = putPolicy.uploadToken(mac)
       return uploadToken
     }),
 })

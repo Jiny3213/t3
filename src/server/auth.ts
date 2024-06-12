@@ -80,7 +80,7 @@ export const authOptions: NextAuthOptions = {
       }
     },
     jwt({ token, account, profile, user }) {
-      console.log('jwt', token, account, profile, user)
+      // console.log('jwt', token, account, profile, user)
       if(user) { // 登录时读取的 user 表信息
         token.hasPassword = !!user.password
       }

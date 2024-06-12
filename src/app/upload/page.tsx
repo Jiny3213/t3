@@ -1,15 +1,16 @@
 'use client'
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { api } from "~/trpc/react"
 import axios from "axios"
-import Image from "next/image"
-import Checkbox from '@mui/material/Checkbox'
-import { Button } from "@mui/material"
+import { Button, CircularProgress, Box, List, ListItem, ListItemText, IconButton, ListItemAvatar, Avatar, Typography, Link, ListItemButton } from "@mui/material"
+import FolderIcon from '@mui/icons-material/Folder'
+import DeleteIcon from '@mui/icons-material/Delete'
+import DownloadIcon from '@mui/icons-material/Download'
+import { type File as FileModel } from "@prisma/client"
 
 export default function Upload() {
   const [file, setFile] = useState<File|null>(null)
   const { data: files, refetch } = api.file.getOwnFiles.useQuery()
-  const [imageIds, setImageIds] = useState<number[]>([])
   const inputRef = useRef<HTMLInputElement>(null)
 
   const submitFile = async () => {
@@ -20,20 +21,21 @@ export default function Upload() {
     const formData = new FormData()
     formData.append('key', file.name)
     formData.append('file', file)
+    formData.append('type', file.type)
     console.log(file)
 
-    await axios.post('/api/upload', formData, {
+    const res = await axios.post('/api/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       }
-    }).then(response => {
-      console.log(response)
-    }).catch(error => {
-      console.error(error)
     })
-    setFile(null)
-    await refetch()
-    alert('上传成功')
+    if(res.data.error) {
+      alert('upload fail')
+    } else {
+      setFile(null)
+      await refetch()
+      alert('upload success')
+    }
   }
 
   const removeFiles = api.file.removeFiles.useMutation({
@@ -42,16 +44,6 @@ export default function Upload() {
       refetch()
     }
   })
-
-  async function onRemove() {
-    if(!imageIds.length) {
-      alert('未选择图片')
-      return
-    }
-    await removeFiles.mutate({fileIds: imageIds})
-    alert('删除成功')
-    setImageIds([])
-  }
 
   async function downloadResource(url: string, filename: string) {
     const response = await fetch(url)
@@ -67,18 +59,23 @@ export default function Upload() {
     document.body.removeChild(downloadLink)
   }
 
-  function onDownload() {
-    if(!imageIds.length) {
-      alert('未选择文件')
-      return
+  async function onDelete(file: FileModel) {
+    const confirm = window.confirm(`delete ${file.originName} ?`)
+    if(confirm) {
+      await removeFiles.mutate({fileIds: [file.id]})
     }
-    const id = imageIds[0]
-    const file = files?.find(item => item.id === id)
-    downloadResource(file?.url || '', file?.name || '')
   }
 
+  async function onDownload(file: FileModel) {
+    downloadResource(file.url, file.originName)
+  }
+
+  useEffect(() => {
+    console.log(file)
+  }, [file])
+
   return (<>
-    <h1 className="text-center text-2xl font-bold">upload your own Images</h1>
+    <h1 className="text-center text-2xl font-bold">Upload your Files:</h1>
     <div className="text-center">
       <p>{file?.name || '未选择任何文件'}</p>
       <Button variant="contained" onClick={() => inputRef.current?.click()}>select file</Button>
@@ -88,21 +85,28 @@ export default function Upload() {
       <Button variant="contained" onClick={submitFile}>Upload</Button>
     </div>
 
-    <h2 className="text-center text-xl font-bold">your Images</h2>
-    <div className="flex gap-1 flex-wrap">
+    <h2 className="text-center text-xl font-bold">Your Files:</h2>
+    {!files && <Box display="flex" justifyContent="center"><CircularProgress /></Box>}
+    <List>
       {files?.map(item => 
-        <div key={item.hash} className="relative border border-gray-200 border-solid">
-          <Checkbox className="absolute top-0 left-0" value={item.id} checked={imageIds.includes(item.id)} onChange={(e, checked) => {
-            console.log(checked, e)
-            checked ? setImageIds(imageIds.concat([Number(e.target.value)])) : setImageIds(imageIds.filter(item => item !== Number(e.target.value)))
-          }}/>
-          <Image alt="image" src={item.url || ''} width={100} height={100}/>
-        </div>
+        <ListItem key={item.hash} secondaryAction={
+          <>
+          <IconButton onClick={() => onDownload(item)}>
+            <DownloadIcon />
+          </IconButton>
+          <IconButton onClick={() => onDelete(item)}>
+            <DeleteIcon />
+          </IconButton>
+          </>
+        }>
+          <ListItemAvatar>
+            {item.type.startsWith('image/') ? <Avatar src={item.url}></Avatar> :<Avatar><FolderIcon /></Avatar>}
+          </ListItemAvatar>
+          <ListItemText>
+            <Link href={item.url} underline="hover" target="_blank">{item.originName || item.name}</Link>
+          </ListItemText>
+        </ListItem>
       )}
-    </div>
-    <div className="text-center mt-4">
-      <Button variant="contained" onClick={onDownload}>下载文件</Button>
-      <Button variant="contained" color="error" onClick={onRemove}>选择并删除图片</Button>
-    </div>
+    </List>
   </>)
 }

@@ -103,12 +103,14 @@ model VerificationToken {
 // }
 
 model File {
-  id        Int      @id @default(autoincrement())
-  name      String // 文件名
-  hash      String // osshash
-  url       String? // 访问url
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  name       String // hash 文件名
+  originName String   @default("") // 原文件名
+  hash       String // osshash
+  url        String // 访问url
+  type       String   @default("") // mimeType
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   createdBy   User   @relation(fields: [createdById], references: [id])
   createdById String

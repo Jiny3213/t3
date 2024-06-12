@@ -1,10 +1,11 @@
-import { type NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server"
 import qiniu from 'qiniu'
-import { env } from "~/env";
-import axios from "axios";
+import { env } from "~/env"
+import axios from "axios"
 import crypto from 'crypto'
-import { db } from "~/server/db";
-import { getServerAuthSession } from "~/server/auth";
+import { db } from "~/server/db"
+import { getServerAuthSession } from "~/server/auth"
+import { CDN_DOMAIN } from "~/config"
 
 // 获取登录token
 function getUploadToken() {
@@ -14,22 +15,33 @@ function getUploadToken() {
     expires: 7200
   }
   const putPolicy = new qiniu.rs.PutPolicy(options)
-  return putPolicy.uploadToken(mac);
+  return putPolicy.uploadToken(mac)
 }
 
 // 上传文件到七牛云，trpc 不支持 formData
 export async function POST(req: NextRequest) {
   const session = await getServerAuthSession()
   const incomeFormData = await req.formData()
-  const file = incomeFormData.get('file') as File
-  console.log(file)
-  if(!file || !session) return NextResponse.json({ message: 'error' })
 
-  const formData = new FormData();
+  const file = incomeFormData.get('file') as File
+  const originName = incomeFormData.get('key') as string
+  const type = incomeFormData.get('type') as string // mimeType
+
+  console.log(file)
+  // 未登录或无文件
+  if(!file || !session) return NextResponse.json({ error: true, message: 'error' })
+
+  const formData = new FormData()
   const uploadToken = getUploadToken()
   const arrayBuffer = await file.arrayBuffer()
   const buffer = Buffer.from(arrayBuffer)
   const filename = crypto.createHash('md5').update(buffer).digest('hex')
+
+  // 是否已有相同文件，通过hash判断
+  const existFile = await db.file.findFirst({
+    where: { name: filename }
+  })
+  if(existFile)return NextResponse.json({ error: true, message: 'error, exist file' })
   
   formData.append('token', uploadToken)
   formData.append('key', filename)
@@ -40,11 +52,11 @@ export async function POST(req: NextRequest) {
       'Authorization': `UpToken ${getUploadToken()}`,
     }
   }).then(response => {
-    console.log(response.data);
+    console.log(response.data)
     return response
   }).catch(error => {
-    console.error(error);
-  });
+    console.error(error)
+  })
 
   const hash = response.data.hash
   const key = response.data.key
@@ -54,7 +66,9 @@ export async function POST(req: NextRequest) {
     data: {
       hash,
       name: filename,
-      url: 'http://sc0mb7a59.hn-bkt.clouddn.com/' + filename,
+      originName,
+      type,
+      url: CDN_DOMAIN + filename, // 无法直接访问，获取时需要通过七牛云鉴权
       createdBy: { connect: { id: session.id } }
     }
   })

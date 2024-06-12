@@ -12,6 +12,7 @@
 - npx prisma db pull 拉一下一个陌生的数据库，获取model
 - Prisma，我只是更新一下表结构，你为什么要重置我的数据库！？https://juejin.cn/post/7361629576416116777
 - 官网指南如何初始化数据库 https://www.prisma.io/docs/orm/prisma-migrate/workflows/baselining
+- prisma db push 直接推送数据库更改，不生成 migrate 文件
 
 ## 技术栈及服务
 
@@ -35,5 +36,5 @@
 
 ## 问题记录
 
-- 本地开发登录态失效问题：本地同时开启多个使用 NextAuth 登录的服务会导致 localhost 其他端口登录态失效，因为 Cookie 被覆盖了 https://juejin.cn/post/7247697988292886585
+- 本地开发登录态失效问题：本地同时开启多个使用 NextAuth 登录的服务会导致 localhost 其他端口登录态失效，因为 Cookie 被覆盖了，cookie不提供端口隔离 https://juejin.cn/post/7247697988292886585；https://github.com/grafana/grafana/issues/68655；解决方法是用局域网ip访问开发服务，可以和 localhost 隔离开
 - 免费版 Cloudflare 支持的HTTP端口：80，8080，8880，2052，2082，2086，2095；HTTPS端口：443，2053，2083，2087，2096，8443。其他端口无法使用，因此访问数据库改用ip连接。
