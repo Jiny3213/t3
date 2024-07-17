@@ -13,7 +13,7 @@ import ListItemText from '@mui/material/ListItemText'
 import HomeIcon from '@mui/icons-material/Home'
 import TranslateIcon from '@mui/icons-material/Translate'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
-import BookmarkIcon from '@mui/icons-material/Bookmark'
+import CheckroomIcon from '@mui/icons-material/Checkroom'
 
 export default function() {
   const [isOpen, setIsOpen] = useState(false)
@@ -29,9 +29,9 @@ export default function() {
       icon: <CloudUploadIcon />
     },
     {
-      label: 'Bookmark',
-      href: '/bookmark',
-      icon: <BookmarkIcon />
+      label: 'Clothes',
+      href: '/clothes',
+      icon: <CheckroomIcon />
     },
   ]
 
