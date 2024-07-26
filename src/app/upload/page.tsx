@@ -78,7 +78,7 @@ export default function Upload() {
   return (<>
     <h1 className="text-center text-2xl font-bold">Upload your Files:</h1>
     <div className="text-center">
-      <UploadImage></UploadImage>
+      {/* <UploadImage></UploadImage> */}
       <p>{file?.name || '未选择任何文件'}</p>
       <Button variant="contained" onClick={() => inputRef.current?.click()}>select file</Button>
       <input ref={inputRef} className="hidden" type="file" onChange={event => setFile(event.target.files ? event.target.files[0]! : null)} />

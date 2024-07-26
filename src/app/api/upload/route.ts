@@ -52,27 +52,31 @@ export async function POST(req: NextRequest) {
       'Authorization': `UpToken ${getUploadToken()}`,
     }
   }).then(response => {
-    console.log(response.data)
+    console.log('七牛云', response.data)
     return response
   }).catch(error => {
     console.error(error)
   })
 
+  // 返回的内容只有这两个
   const hash = response.data.hash
-  const key = response.data.key
-  
-  console.log(session)
+  const key = response.data.key // 这个就是传入的文件名, key === filename
+  const url = CDN_DOMAIN + '/' + key
+
   const dbres = await db.file.create({
     data: {
       hash,
       name: filename,
       originName,
       type,
-      url: CDN_DOMAIN + filename, // 无法直接访问，获取时需要通过七牛云鉴权
+      url,
       createdBy: { connect: { id: session.id } }
     }
   })
-  console.log(dbres)
+  console.log('dbres', dbres)
 
-  return NextResponse.json(response.data)
+  return NextResponse.json({
+    key: response.data.key,
+    url
+  })
 }
