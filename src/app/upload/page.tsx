@@ -7,6 +7,7 @@ import FolderIcon from '@mui/icons-material/Folder'
 import DeleteIcon from '@mui/icons-material/Delete'
 import DownloadIcon from '@mui/icons-material/Download'
 import { type File as FileModel } from "@prisma/client"
+import UploadImage from "../_components/UploadImage"
 
 export default function Upload() {
   const [file, setFile] = useState<File|null>(null)
@@ -77,6 +78,7 @@ export default function Upload() {
   return (<>
     <h1 className="text-center text-2xl font-bold">Upload your Files:</h1>
     <div className="text-center">
+      <UploadImage></UploadImage>
       <p>{file?.name || '未选择任何文件'}</p>
       <Button variant="contained" onClick={() => inputRef.current?.click()}>select file</Button>
       <input ref={inputRef} className="hidden" type="file" onChange={event => setFile(event.target.files ? event.target.files[0]! : null)} />
