@@ -21,6 +21,7 @@
     "@mui/lab": "5.0.0-alpha.172",
     "@mui/material": "^5.15.16",
     "@mui/material-nextjs": "^5.15.11",
+    "@mui/x-data-grid": "^7.11.1",
     "@mui/x-date-pickers": "^7.10.0",
     "@prisma/client": "^5.10.2",
     "@t3-oss/env-nextjs": "^0.9.2",

@@ -14,6 +14,7 @@ import HomeIcon from '@mui/icons-material/Home'
 import TranslateIcon from '@mui/icons-material/Translate'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import CheckroomIcon from '@mui/icons-material/Checkroom'
+import CurrencyYenIcon from '@mui/icons-material/CurrencyYen';
 
 export default function() {
   const [isOpen, setIsOpen] = useState(false)
@@ -33,6 +34,11 @@ export default function() {
       href: '/clothes',
       icon: <CheckroomIcon />
     },
+    {
+      label: 'Cycle cost',
+      href: '/cycleCost',
+      icon: <CurrencyYenIcon />
+    }
   ]
 
   const DrawerList = (

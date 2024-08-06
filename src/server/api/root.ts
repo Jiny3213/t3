@@ -3,6 +3,7 @@ import { postRouter } from "~/server/api/routers/post"
 import { fileRouter } from "./routers/file"
 import { translateRouter } from "./routers/translate"
 import { userRouter } from "./routers/user"
+import { cycleCostRouter } from "./routers/cycleCost"
 
 /**
  * This is the primary router for your server.
@@ -13,7 +14,8 @@ export const appRouter = createTRPCRouter({
   post: postRouter,
   file: fileRouter,
   translate: translateRouter,
-  user: userRouter
+  user: userRouter,
+  cycleCost: cycleCostRouter
 })
 
 // export type definition of API

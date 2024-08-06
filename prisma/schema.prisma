@@ -54,18 +54,18 @@ model Session {
 }
 
 model User {
-  id              String            @id @default(cuid())
-  name            String?
-  email           String?           @unique
-  emailVerified   DateTime?
-  image           String?
-  password        String?
-  verifyCode      String? // 验证码
-  phone           String?
-  accounts        Account[]
-  sessions        Session[]
-  posts           Post[]
-  File            File[]
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  verifyCode    String? // 验证码
+  phone         String?
+  accounts      Account[]
+  sessions      Session[]
+  posts         Post[]
+  File          File[]
   // ClothesCategory ClothesCategory[]
   // Clothes         Clothes[]
 }
@@ -126,3 +126,23 @@ model Config {
 //   categoryId String
 //   category   ClothesCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 // }
+
+// 实现周期消费记录
+model CycleCost {
+  id        Int       @id @default(autoincrement())
+  userId    String
+  name      String
+  cycleType CycleType
+  cost      Int // 单位 分
+  startAt   DateTime  @default(now()) // 从什么时候开始消费
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  remark    String? // 备注
+}
+
+enum CycleType {
+  DAY
+  WEEK
+  MONTH
+  YEAR
+}
