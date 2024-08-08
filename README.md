@@ -1,8 +1,8 @@
 # Create By T3
 
-使用 nextjs、typescript、trpc、prisma 构建的全栈项目，关于 T3 详见 https://create.t3.gg/
+个人测试项目
 
-项目地址 [t3.jinyuu.cn](https://t3.jinyuu.cn/)
+使用 nextjs、typescript、trpc、prisma 构建的全栈项目，关于 T3 详见 https://create.t3.gg/
 
 ## prisma 常用命令及相关问题
 

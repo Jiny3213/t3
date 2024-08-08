@@ -1,6 +1,6 @@
 'use client'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid'
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Select, MenuItem, FormControl, InputLabel, FormHelperText } from '@mui/material'
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Select, MenuItem, FormControl, InputLabel, FormHelperText, Fab } from '@mui/material'
 import { Controller, useForm, type SubmitHandler } from "react-hook-form"
 import { useEffect, useState } from 'react'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
@@ -9,6 +9,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { CycleType, type CycleCost } from '@prisma/client'
 import { api } from '~/trpc/react'
+import AddIcon from '@mui/icons-material/Add'
 
 type CycleCostInputs =  {
   name: string
@@ -137,16 +138,13 @@ export default function CycleCost () {
   return <>
   {/* 每日每周每月每年成本核算 */}
     <div style={{ width: '100%' }}>
-      <Button variant="contained" onClick={() => {
-        setCurrent(null)
-        reset()
-        setOpenEditDialog(true)
-      }}>增</Button>
       <div>每日开销：{costDisplay?.[CycleType.DAY]}</div>
       <div>每周开销：{costDisplay?.[CycleType.WEEK]}</div>
       <div>每月开销：{costDisplay?.[CycleType.MONTH]}</div>
       <div>每年开销：{costDisplay?.[CycleType.YEAR]}</div>
       <DataGrid
+        disableColumnMenu
+        disableColumnSorting
         autoHeight
         rows={data || []}
         columns={columns}
@@ -157,11 +155,18 @@ export default function CycleCost () {
         }}
         pageSizeOptions={[10]}
         getRowId={value => {
-          // console.log(value)
           return value.name
         }}
       />
     </div>
+
+    <Fab color="primary" aria-label="add" sx={{bottom: 16, right: 16, position: 'fixed'}} onClick={() => {
+        setCurrent(null)
+        reset()
+        setOpenEditDialog(true)
+      }}>
+        <AddIcon />
+    </Fab>
 
     <Dialog 
       open={openEditDialog}
@@ -203,6 +208,7 @@ export default function CycleCost () {
           <TextField 
             id="cost" 
             label="花费" 
+            type="number"
             {...register('cost', { required: '你输入啊' })}
             error={!!errors.cost}
             helperText={errors.cost?.message}

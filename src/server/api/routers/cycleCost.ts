@@ -1,7 +1,4 @@
 import { z } from "zod"
-import qiniu from 'qiniu'
-import { env } from "~/env"
-import { CDN_DOMAIN } from "~/config"
 import { CycleType } from "@prisma/client"
 
 import {
@@ -22,7 +19,7 @@ export const cycleCostRouter = createTRPCRouter({
   create: protectedProcedure
     .input(z.object({
       name: z.string(),
-      cycleType: z.enum(['DAY', 'WEEK', 'MONTH', 'YEAR']),
+      cycleType: z.nativeEnum(CycleType),
       cost: z.number(),
       startAt: z.date(),
       remark: z.string().optional()
@@ -40,7 +37,7 @@ export const cycleCostRouter = createTRPCRouter({
     .input(z.object({
       id: z.number(),
       name: z.string(),
-      cycleType: z.enum(['DAY', 'WEEK', 'MONTH', 'YEAR']),
+      cycleType: z.nativeEnum(CycleType),
       cost: z.number(),
       startAt: z.date(),
       remark: z.string().optional()
