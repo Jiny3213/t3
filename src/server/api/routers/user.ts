@@ -13,6 +13,10 @@ const decrypt = new JSEncrypt()
 decrypt.setPrivateKey(env.RSA_PRIV)
 
 export const userRouter = createTRPCRouter({
+  sayHello: publicProcedure
+    .query(() => {
+      return { message: 'hello' }
+    }),
   setPassword: protectedProcedure
     .input(z.object({
       password: z.string()
