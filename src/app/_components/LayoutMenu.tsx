@@ -1,5 +1,5 @@
 'use client'
-import { IconButton } from "@mui/material"
+import { IconButton, Typography } from "@mui/material"
 import MenuIcon from '@mui/icons-material/Menu'
 import { useState } from "react"
 import Box from '@mui/material/Box'
@@ -10,14 +10,19 @@ import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
+import { usePathname } from "next/navigation"
+
 import HomeIcon from '@mui/icons-material/Home'
+
 import TranslateIcon from '@mui/icons-material/Translate'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import CheckroomIcon from '@mui/icons-material/Checkroom'
-import CurrencyYenIcon from '@mui/icons-material/CurrencyYen';
+import CurrencyYenIcon from '@mui/icons-material/CurrencyYen'
+import HikingIcon from '@mui/icons-material/Hiking'
 
 export default function() {
   const [isOpen, setIsOpen] = useState(false)
+  const pathname = usePathname()
   const menuList = [
     {
       label: 'Translate',
@@ -38,6 +43,11 @@ export default function() {
       label: 'Cycle cost',
       href: '/cycleCost',
       icon: <CurrencyYenIcon />
+    },
+    {
+      label: 'Travel',
+      href: '/travel',
+      icon: <HikingIcon />
     }
   ]
 
@@ -80,6 +90,9 @@ export default function() {
     <Drawer open={isOpen} onClose={() => setIsOpen(false)}>
       {DrawerList}
     </Drawer>
+    <Typography variant="h6" component="h1" sx={{ flexGrow: 1 }}>
+      {menuList.find(item => item.href === pathname)?.label || 'Create t3 app'}
+    </Typography>
     </>
   )
 }
