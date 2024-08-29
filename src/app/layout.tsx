@@ -40,7 +40,19 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z5BKQN4VZW"></script>
         <script
+          dangerouslySetInnerHTML={{
+            __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-Z5BKQN4VZW');
+            `,
+          }}
+        ></script>
+        {/* <script
           dangerouslySetInnerHTML={{
             __html: `
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -50,12 +62,12 @@ export default async function RootLayout({
             })(window,document,'script','dataLayer','GTM-KTZQFVDM');
             `,
           }}
-        ></script>
+        ></script> */}
       </head>
       <body className={`font-sans ${inter.variable}`} id="__next">
-        <noscript>
+        {/* <noscript>
           <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KTZQFVDM" height="0" width="0" style={{display: 'none', visibility: 'hidden'}}></iframe>
-        </noscript>
+        </noscript> */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
