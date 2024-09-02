@@ -20,6 +20,8 @@ import CheckroomIcon from '@mui/icons-material/Checkroom'
 import CurrencyYenIcon from '@mui/icons-material/CurrencyYen'
 import HikingIcon from '@mui/icons-material/Hiking'
 
+import dayjs from "dayjs"
+
 export default function() {
   const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
@@ -65,7 +67,13 @@ export default function() {
       <List>
         {menuList.map((item, index) => (
           <ListItem key={item.label} disablePadding>
-            <ListItemButton href={item.href}>
+            <ListItemButton href={item.href} onClick={e => {
+              console.log('click', e)
+              window.gtag('event', 'menu.click', {
+                date: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+                menu: item.label
+              })
+            }}>
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.label} />
             </ListItemButton>
