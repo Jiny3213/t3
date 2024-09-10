@@ -24,8 +24,8 @@ export async function POST(req: NextRequest) {
   const incomeFormData = await req.formData()
 
   const file = incomeFormData.get('file') as File
-  const originName = incomeFormData.get('key') as string
-  const type = incomeFormData.get('type') as string // mimeType
+  const originName = incomeFormData.get('originName') as string
+  const mimeType = incomeFormData.get('mimeType') as string // mimeType
 
   console.log(file)
   // 未登录或无文件
@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
       hash,
       name: filename,
       originName,
-      type,
+      type: mimeType,
       url,
       createdBy: { connect: { id: session.id } }
     }

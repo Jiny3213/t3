@@ -66,8 +66,6 @@ model User {
   sessions      Session[]
   posts         Post[]
   File          File[]
-  // ClothesCategory ClothesCategory[]
-  // Clothes         Clothes[]
 }
 
 model VerificationToken {
@@ -79,14 +77,16 @@ model VerificationToken {
 }
 
 model File {
-  id         Int      @id @default(autoincrement())
+  id         Int    @id @default(autoincrement())
   name       String // hash 文件名，通过这个字段和七牛云sdk返回可访问的url
-  originName String   @default("") // 原文件名
+  originName String @default("") // 原文件名
   hash       String // osshash
   url        String // 访问url
-  type       String   @default("") // mimeType
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  type       String @default("") // mimeType
+  saveType   Int // 保存类型，1文件页面，2衣柜上传图片
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   createdBy   User   @relation(fields: [createdById], references: [id])
   createdById String
@@ -100,31 +100,27 @@ model Config {
   updatedAt DateTime @updatedAt
 }
 
-// // 实现电子衣柜
+// 实现电子衣柜
 // model ClothesCategory {
-//   id        String    @id @default(cuid())
-//   name      String
-//   // parentId  String? // 父类?
-//   createdAt DateTime  @default(now())
-//   updatedAt DateTime  @updatedAt
-//   userId    String
-//   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-//   Clothes   Clothes[] // 分类下的衣服
+//   id        Int      @id @default(autoincrement())
+//   pid       Int      @default(0) // 父类id
+//   name      String // 分类名
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   userId    String // 用户id
 // }
 
 // model Clothes {
-//   id         String          @id @default(cuid())
+//   id         String    @id @default(cuid())
 //   name       String // 衣服的名称
 //   images     String? // 衣服的图片，File的name，通过英文逗号分隔多张图片
-//   buyTime    DateTime? // 什么时候买的
+//   buyAt      DateTime? // 什么时候买的
 //   cost       Int? // 花费，单位分，Int 2147483647
 //   location   String? // 现在放哪了
-//   createdAt  DateTime        @default(now())
-//   updatedAt  DateTime        @updatedAt
+//   createdAt  DateTime  @default(now())
+//   updatedAt  DateTime  @updatedAt
 //   userId     String
-//   user       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-//   categoryId String
-//   category   ClothesCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+//   categoryId Int
 // }
 
 // 实现周期消费记录

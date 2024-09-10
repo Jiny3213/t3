@@ -29,6 +29,9 @@ export const config = {
   matcher: [
     '/user', 
     '/upload', 
-    '/translate'
+    '/translate',
+    '/cycleCost',
+    '/travel',
+    '/clothes'
   ] 
 }

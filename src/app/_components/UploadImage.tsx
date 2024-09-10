@@ -10,8 +10,8 @@ export default function UploadImage({ url, onUploaded }: {
   const inputRef = useRef<HTMLInputElement>(null)
 
   return <>
-    <Box sx={{width: '100%', height: '200px', border: '1px dashed #888'}}>
-      <img src={url} style={{'objectFit': 'contain'}}/>
+    <Box sx={{width: '100%', minHeight: '200px', border: '1px dashed #888'}}>
+      <img src={url} style={{'width': '100%'}}/>
     </Box>
     <Button variant="outlined" startIcon={<UploadFileIcon />} onClick={() => inputRef.current?.click()}>上传图片</Button>
     <input ref={inputRef} className="hidden" type="file" onChange={async (event) => {
@@ -24,8 +24,8 @@ export default function UploadImage({ url, onUploaded }: {
       }
       const formData = new FormData()
       formData.append('key', file.name)
-      formData.append('file', file)
-      formData.append('type', file.type)
+      formData.append('originName', file)
+      formData.append('mimeType', file.type)
       const res = await axios.post('/api/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
