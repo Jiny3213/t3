@@ -2,7 +2,7 @@
 import Fab from '@mui/material/Fab'
 import AddIcon from '@mui/icons-material/Add'
 import EditIcon from '@mui/icons-material/Edit'
-import { Chip, Badge, Box, Stack, ImageList, ImageListItem, ImageListItemBar, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material'
+import { Chip, Badge, Box, Stack, ImageList, ImageListItem, ImageListItemBar, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Select, MenuItem } from '@mui/material'
 import { useState } from 'react'
 import { Controller, useForm, type SubmitHandler } from "react-hook-form"
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
@@ -23,6 +23,7 @@ type ClothesInputs = {
   cost: number | undefined
   location: string
   cover: string
+  categoryId: number
 }
 
 export default function() {
@@ -33,12 +34,18 @@ export default function() {
   const [currentClothes, setCurrentClothes] = useState<any>(null)
 
   const { data: categoryList = [], refetch: refetchCategory } = api.clothes.getCategory.useQuery()
-  const { data: clothesList = [], refetch: refetchClothes } = api.clothes.getClothes.useQuery()
+  const defaultCategory = {
+    id: 0,
+    pid: 0,
+    name: '默认',
+  }
+  const { data: clothesList = [], refetch: refetchClothes } = api.clothes.getClothes.useQuery({
+    categoryId: categoryList[activeCate - 1]?.id
+  })
   const createCategory = api.clothes.createCategory.useMutation()
   const updateCategory = api.clothes.updateCategory.useMutation()
   const createClothes = api.clothes.createClothes.useMutation()
   const updateClothes = api.clothes.updateClothes.useMutation()
-
 
   const {
     register: cateRegister,
@@ -93,18 +100,20 @@ export default function() {
   return <>
     <Box sx={{ p:2 }}>
       <Stack direction="row" spacing={2} flexWrap="wrap" useFlexGap>
-        { categoryList.map((item, index) => (
+        { [defaultCategory, ...categoryList].map((item, index) => (
           <Badge key={item.name} badgeContent={4} color="primary">
             <Chip 
               label={item.name} 
               {...activeCate === index && {
                 color: 'primary',
-                onDelete: () => {
-                  setCurrentCate(item)
-                  setCateValue('name', item.name)
-                  setOpenCate(true)
-                },
-                deleteIcon: <EditIcon />
+                ...item.id !== 0 && {
+                  onDelete: () => {
+                    setCurrentCate(item)
+                    setCateValue('name', item.name)
+                    setOpenCate(true)
+                  },
+                  deleteIcon: <EditIcon />
+                }
               }}
               onClick={() => {
                 setCurrentCate(null)
@@ -175,6 +184,17 @@ export default function() {
               error={!!clothesErrors.location}
               helperText={clothesErrors.location?.message}
               ></TextField>
+            <TextField
+              id="categoryId"
+              {...clothesRegister('categoryId')}
+              defaultValue={0}
+              select
+              label="分类"
+              >
+                {[defaultCategory, ...categoryList].map(item => (
+                  <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
+                ))}
+            </TextField>
             {/* https://github.com/orgs/react-hook-form/discussions/10135 */}
             <Controller 
               control={clothesControl}
@@ -233,7 +253,7 @@ export default function() {
             <TextField 
               id="name" 
               label="分类名称" 
-              {...cateRegister('name', { required: '你输入啊' })}
+              {...cateRegister('name', { required: '请输入分类名称' })}
               error={!!cateErrors.name}
               helperText={cateErrors.name?.message}
               ></TextField>

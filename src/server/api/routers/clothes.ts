@@ -49,9 +49,15 @@ export const clothesRouter = createTRPCRouter({
     }),
 
   getClothes: protectedProcedure
-    .query(async({ctx}) => {
+    .input(z.object({
+      categoryId: z.number().optional()
+    }))
+    .query(async({ctx, input}) => {
       return ctx.db.clothes.findMany({
-        where: { userId: ctx.session.id }
+        where: { 
+          userId: ctx.session.id,
+          ...input.categoryId ? { categoryId: input.categoryId } : {}
+        }
       })
     }),
   
