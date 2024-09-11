@@ -20,9 +20,11 @@ export default function Upload() {
       return
     }
     const formData = new FormData()
-    formData.append('key', file.name)
     formData.append('file', file)
-    formData.append('type', file.type)
+    formData.append('originName', file.name)
+    formData.append('mimeType', file.type)
+    formData.append('saveType', '1')
+    
     console.log(file)
 
     const res = await axios.post('/api/upload', formData, {

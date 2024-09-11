@@ -26,6 +26,7 @@ export async function POST(req: NextRequest) {
   const file = incomeFormData.get('file') as File
   const originName = incomeFormData.get('originName') as string
   const mimeType = incomeFormData.get('mimeType') as string // mimeType
+  const saveType = parseInt(incomeFormData.get('saveType') as string) || 1
 
   console.log(file)
   // 未登录或无文件
@@ -69,6 +70,7 @@ export async function POST(req: NextRequest) {
       name: filename,
       originName,
       type: mimeType,
+      saveType,
       url,
       createdBy: { connect: { id: session.id } }
     }

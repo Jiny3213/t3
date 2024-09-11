@@ -83,7 +83,7 @@ model File {
   hash       String // osshash
   url        String // 访问url
   type       String @default("") // mimeType
-  saveType   Int // 保存类型，1文件页面，2衣柜上传图片
+  saveType   Int @default(1)// 保存类型，1文件页面，2衣柜上传图片
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

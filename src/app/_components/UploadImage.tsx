@@ -23,9 +23,11 @@ export default function UploadImage({ url, onUploaded }: {
         return
       }
       const formData = new FormData()
-      formData.append('key', file.name)
-      formData.append('originName', file)
+      formData.append('file', file)
+      formData.append('originName', file.name)
       formData.append('mimeType', file.type)
+      formData.append('saveType', '2')
+
       const res = await axios.post('/api/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
