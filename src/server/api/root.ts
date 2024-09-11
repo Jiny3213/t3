@@ -4,6 +4,7 @@ import { fileRouter } from "./routers/file"
 import { translateRouter } from "./routers/translate"
 import { userRouter } from "./routers/user"
 import { cycleCostRouter } from "./routers/cycleCost"
+import { clothesRouter } from "./routers/clothes" 
 
 /**
  * This is the primary router for your server.
@@ -15,7 +16,8 @@ export const appRouter = createTRPCRouter({
   file: fileRouter,
   translate: translateRouter,
   user: userRouter,
-  cycleCost: cycleCostRouter
+  cycleCost: cycleCostRouter,
+  clothes: clothesRouter
 })
 
 // export type definition of API

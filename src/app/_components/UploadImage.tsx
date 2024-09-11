@@ -5,7 +5,7 @@ import axios from "axios"
 
 export default function UploadImage({ url, onUploaded }: {
   url: string,
-  onUploaded: (url: string) => void
+  onUploaded: (data: { url?: string, key?: string, error?: string, message?: string }) => void
 }) {
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -33,7 +33,7 @@ export default function UploadImage({ url, onUploaded }: {
           'Content-Type': 'multipart/form-data',
         }
       })
-      onUploaded(res.data.url)
+      onUploaded(res.data)
       if(res.data.error) {
         alert('upload fail')
       } else {

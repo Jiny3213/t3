@@ -101,29 +101,35 @@ model Config {
 }
 
 // 实现电子衣柜
-// model ClothesCategory {
-//   id        Int      @id @default(autoincrement())
-//   pid       Int      @default(0) // 父类id
-//   name      String // 分类名
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-//   userId    String // 用户id
-// }
+model ClothesCategory {
+  id        Int      @id @default(autoincrement())
+  pid       Int      @default(0) // 父类id
+  name      String // 分类名
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String // 用户id
+}
 
-// model Clothes {
-//   id         String    @id @default(cuid())
-//   name       String // 衣服的名称
-//   images     String? // 衣服的图片，File的name，通过英文逗号分隔多张图片
-//   buyAt      DateTime? // 什么时候买的
-//   cost       Int? // 花费，单位分，Int 2147483647
-//   location   String? // 现在放哪了
-//   createdAt  DateTime  @default(now())
-//   updatedAt  DateTime  @updatedAt
-//   userId     String
-//   categoryId Int
-// }
+model Clothes {
+  id         Int    @id @default(autoincrement())
+  name       String // 衣服的名称
+  cover      String? // 衣服的封面图片，filename，方便以后改图片域名
+  buyAt      DateTime? // 什么时候买的
+  cost       Int? // 花费，单位分，Int 2147483647
+  location   String? // 现在放哪了
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  userId     String
+  categoryId Int?
+}
 
 // 实现周期消费记录
+enum CycleType {
+  DAY
+  WEEK
+  MONTH
+  YEAR
+}
 model CycleCost {
   id        Int       @id @default(autoincrement())
   userId    String
@@ -136,9 +142,4 @@ model CycleCost {
   remark    String? // 备注
 }
 
-enum CycleType {
-  DAY
-  WEEK
-  MONTH
-  YEAR
-}
+

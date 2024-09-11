@@ -5,7 +5,7 @@ import axios from "axios"
 import crypto from 'crypto'
 import { db } from "~/server/db"
 import { getServerAuthSession } from "~/server/auth"
-import { CDN_DOMAIN } from "~/config"
+import { CND_PATH } from "~/config"
 
 // 获取登录token
 function getUploadToken() {
@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
   // 返回的内容只有这两个
   const hash = response.data.hash
   const key = response.data.key // 这个就是传入的文件名, key === filename
-  const url = CDN_DOMAIN + '/' + key
+  const url = CND_PATH + key
 
   const dbres = await db.file.create({
     data: {

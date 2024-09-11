@@ -5,3 +5,4 @@ BmQVIXXObeIR+Rz8PdPMNxWJ+6RGXgpwkiZuW67X3hmoLOroolFXDAPmh3TK/8Qk
 tSjV2ebtNdTLZRAnJQIDAQAB
 `
 export const CDN_DOMAIN = 'http://cdn.jinyuu.cn'
+export const CND_PATH = 'http://cdn.jinyuu.cn/'
