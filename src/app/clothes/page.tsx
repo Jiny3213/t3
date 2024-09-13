@@ -171,9 +171,9 @@ export default function() {
               ></TextField>
             <TextField 
               id="cost" 
-              label="花费" 
+              label="花费(元)" 
               type="number"
-              {...clothesRegister('cost')}
+              {...clothesRegister('cost', { valueAsNumber: true })}
               error={!!clothesErrors.cost}
               helperText={clothesErrors.cost?.message}
               ></TextField>
@@ -186,7 +186,7 @@ export default function() {
               ></TextField>
             <TextField
               id="categoryId"
-              {...clothesRegister('categoryId')}
+              {...clothesRegister('categoryId', { valueAsNumber: true })}
               defaultValue={0}
               select
               label="分类"
