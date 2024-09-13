@@ -12,10 +12,14 @@ import {
 export const fileRouter = createTRPCRouter({
   // 获取用户所有文件
   getOwnFiles: protectedProcedure
-    .query(async ({ ctx }) => {
+    .input(z.object({
+      saveType: z.number()
+    }))
+    .query(async ({ ctx, input }) => {
       const ownFiles = await ctx.db.file.findMany({
         where: {
-          createdById: ctx.session.id
+          createdById: ctx.session.id,
+          saveType: input.saveType
         }
       })
       // 启用私有oss逻辑

@@ -2,17 +2,20 @@
 import { useEffect, useRef, useState } from "react"
 import { api } from "~/trpc/react"
 import axios from "axios"
-import { Button, CircularProgress, Box, List, ListItem, ListItemText, IconButton, ListItemAvatar, Avatar, Typography, Link, ListItemButton } from "@mui/material"
+import { Button, CircularProgress, Box, List, ListItem, ListItemText, IconButton, ListItemAvatar, Avatar, Typography, Link, ListItemButton, Select, NativeSelect, MenuItem, FormControl, InputLabel } from "@mui/material"
 import FolderIcon from '@mui/icons-material/Folder'
 import DeleteIcon from '@mui/icons-material/Delete'
 import DownloadIcon from '@mui/icons-material/Download'
 import { type File as FileModel } from "@prisma/client"
-import UploadImage from "../_components/UploadImage"
 
 export default function Upload() {
   const [file, setFile] = useState<File|null>(null)
-  const { data: files, refetch } = api.file.getOwnFiles.useQuery()
   const inputRef = useRef<HTMLInputElement>(null)
+  const [saveType, setSaveType] = useState(1)
+
+  const { data: files, refetch } = api.file.getOwnFiles.useQuery({
+    saveType
+  })
 
   const submitFile = async () => {
     if(!file) {
@@ -78,18 +81,31 @@ export default function Upload() {
   }, [file])
 
   return (<>
-    <h1 className="text-center text-2xl font-bold">Upload your Files:</h1>
     <div className="text-center">
-      {/* <UploadImage></UploadImage> */}
       <p>{file?.name || '未选择任何文件'}</p>
-      <Button variant="contained" onClick={() => inputRef.current?.click()}>select file</Button>
+      <Button variant="contained" onClick={() => inputRef.current?.click()} sx={{mr: 4}}>select file</Button>
+      <Button variant="contained" onClick={submitFile}>Upload</Button>
       <input ref={inputRef} className="hidden" type="file" onChange={event => setFile(event.target.files ? event.target.files[0]! : null)} />
     </div>
-    <div className="text-center mt-4">
-      <Button variant="contained" onClick={submitFile}>Upload</Button>
+
+    <div>
+      <FormControl sx={{ m: 1, minWidth: 80 }}>
+        <InputLabel id="demo-simple-select-label">文件筛选</InputLabel>
+        <Select
+          size="small"
+          autoWidth
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={saveType}
+          label="文件筛选"
+          onChange={e => setSaveType(Number(e.target.value))}
+        >
+          <MenuItem value={1}>普通文件</MenuItem>
+          <MenuItem value={2}>衣柜文件</MenuItem>
+        </Select>
+      </FormControl>
     </div>
 
-    <h2 className="text-center text-xl font-bold">Your Files:</h2>
     {!files && <Box display="flex" justifyContent="center"><CircularProgress /></Box>}
     <List>
       {files?.map(item => 
