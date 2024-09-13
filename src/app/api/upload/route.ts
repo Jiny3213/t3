@@ -28,7 +28,6 @@ export async function POST(req: NextRequest) {
   const mimeType = incomeFormData.get('mimeType') as string // mimeType
   const saveType = parseInt(incomeFormData.get('saveType') as string) || 1
 
-  console.log(file)
   // 未登录或无文件
   if(!file || !session) return NextResponse.json({ error: true, message: 'error' })
 
@@ -36,16 +35,11 @@ export async function POST(req: NextRequest) {
   const uploadToken = getUploadToken()
   const arrayBuffer = await file.arrayBuffer()
   const buffer = Buffer.from(arrayBuffer)
-  const filename = crypto.createHash('md5').update(buffer).digest('hex')
+  // 文件内容和时间戳生成hash，允许上传相同的文件
+  const fileHash = crypto.createHash('md5').update(buffer).update(new Date().getTime().toString()).digest('hex')
 
-  // 是否已有相同文件，通过hash判断
-  const existFile = await db.file.findFirst({
-    where: { name: filename }
-  })
-  if(existFile)return NextResponse.json({ error: true, message: 'error, exist file' })
-  
   formData.append('token', uploadToken)
-  formData.append('key', filename)
+  formData.append('key', fileHash)
   formData.append('file', file)
   const response: any = await axios.post('http://up-z2.qiniup.com/', formData, {
     headers: {
@@ -61,13 +55,13 @@ export async function POST(req: NextRequest) {
 
   // 返回的内容只有这两个
   const hash = response.data.hash
-  const key = response.data.key // 这个就是传入的文件名, key === filename
+  const key = response.data.key // 这个就是传入的文件名, key === fileHash
   const url = CND_PATH + key
 
   const dbres = await db.file.create({
     data: {
       hash,
-      name: filename,
+      name: fileHash,
       originName,
       type: mimeType,
       saveType,
@@ -75,7 +69,6 @@ export async function POST(req: NextRequest) {
       createdBy: { connect: { id: session.id } }
     }
   })
-  console.log('dbres', dbres)
 
   return NextResponse.json({
     key: response.data.key,
