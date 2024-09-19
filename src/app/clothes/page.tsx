@@ -145,7 +145,7 @@ export default function() {
             setClothesValue('cost', item.cost ? item.cost / 100 : undefined)
             setClothesValue('cover', item.cover || '')
           }}>
-            <img src={item.cover ? CND_PATH + item.cover : "/images/default_image.png"} alt="clothes" loading="lazy"/>
+            <img src={item.cover ? '/static/' + item.cover : "/images/default_image.png"} alt="clothes" loading="lazy"/>
             <ImageListItemBar 
               title={item.name}
               subtitle={item.buyAt ? dayjs(item.buyAt).format('YYYY-MM-DD') : '-'}
@@ -225,7 +225,7 @@ export default function() {
               // rules={{ required: '你输入啊' }}
               render={({field}) => {
                 return (
-                  <UploadImage url={field.value ? CND_PATH + field.value : "/images/default_image.png"} onUploaded={data => {
+                  <UploadImage url={field.value ? '/static/' + field.value : "/images/default_image.png"} onUploaded={data => {
                     console.log('onUploaded', data)
                     if(data.key) {
                       field.onChange(data.key)

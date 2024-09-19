@@ -57,6 +57,15 @@ const config = {
       },
     ],
   },
+
+  rewrites: async () => {
+    return [
+      {
+        source: '/static/:path*',
+        destination: 'http://cdn.jinyuu.cn/:path*',
+      },
+    ]
+  }
 };
 
 export default config

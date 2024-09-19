@@ -120,7 +120,7 @@ export default function Upload() {
           </>
         }>
           <ListItemAvatar>
-            {item.type.startsWith('image/') ? <Avatar src={item.url}></Avatar> :<Avatar><FolderIcon /></Avatar>}
+            {item.type.startsWith('image/') ? <Avatar src={`/static/${item.name}`}></Avatar> :<Avatar><FolderIcon /></Avatar>}
           </ListItemAvatar>
           <ListItemText>
             <Link href={item.url} underline="hover" target="_blank">{item.originName || item.name}</Link>
