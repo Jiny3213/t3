@@ -13,6 +13,8 @@
 - Prisma，我只是更新一下表结构，你为什么要重置我的数据库！？https://juejin.cn/post/7361629576416116777
 - 官网指南如何初始化数据库 https://www.prisma.io/docs/orm/prisma-migrate/workflows/baselining
 - prisma db push 直接推送数据库更改，不生成 migrate 文件
+- npx vercel login 登录
+- npx vercel deploy 在vercel上构建+部署，不需要通过git，需要在vercel上手动指定环境变量 https://vercel.com/guides/using-vercel-cli-for-custom-workflows
 
 ## 技术栈及服务
 
